@@ -3,6 +3,7 @@ from pyspark.sql.functions import lit
 from pyspark.sql.types import StringType
 import os
 from dotenv import load_dotenv
+import pandas as pd
 
 # Load environment variables from root .env file
 load_dotenv(os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), '.env'))
@@ -50,12 +51,16 @@ df.show(5, truncate=False)
 
 print("\nTotal rows:", df.count())
 
-# Write to CSV using absolute path
-output_path = os.path.join(local_path, 'cleaned_discogs.csv')
-df.write \
-    .mode("overwrite") \
-    .option("header", "true") \
-    .csv(output_path)
+# Convert to Pandas DataFrame for easier manipulation
+pandas_df = df.toPandas()
+
+# Get the absolute path to the data directory
+data_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'data')
+output_path = os.path.join(data_dir, 'cleaned_discogs_sample.csv')
+
+# Save to CSV using Pandas
+pandas_df.to_csv(output_path, index=False)
+print(f"\nSaved cleaned data to: {output_path}")
 
 # Stop Spark session
 spark.stop() 
