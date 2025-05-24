@@ -37,11 +37,11 @@ class Dummy {
       ),
       TrackModel(
         id: '5',
-        title: 'Raghm el masafa',
-        artistName: 'Masar Egbari',
-        spotifyUrl: 'https://open.spotify.com/track/2pL1V75Sv9ZUTJuWrRcu0v',
+        title: 'Roma',
+        artistName: 'cairokee',
+        spotifyUrl: 'https://open.spotify.com/artist/2GVksDv9UpY60i4CvytrZK',
         imageUrl:
-            'https://i.scdn.co/image/ab67616d0000b2737ccecfad644d45d3362d1d79',
+            'https://i.scdn.co/image/ab67616d0000b2736609642c8f294da97bd0f76b',
       ),
     ];
   }

@@ -1,52 +1,57 @@
 import 'package:flutter/material.dart';
 
 class AppColors {
-  static const Color midnightBlue = Color(0xFF18536c);
-  static const Color lightMidnightBlue = Color(0xFF387B97);
+  // -------------------- Primary Theme Colors -------------------- //
+  static const Color primaryColor = Color(0xFFE93989); // electricPink
+  static const Color secondaryColor = Color(0xFF3E80B1); // cyanBlue
+  static const Color accentColor = Color(0xFFCA1CB0); // neonMagenta
 
-  static const Color blueGrey = Color(0xFFdee5e8);
-  static const Color yellow = Color(0xFFffe99d);
-  static const Color lightYellow = Color(0xFFfff3ca);
-  static const Color darkSpaceGrey = Color(0xFF212c2d);
-  static const Color white = Colors.white;
-  static const Color grey = Color(0xFF535a5e);
-  static const Color grey3DisabledColor = Color(0xFF9fa3a5);
-  static const Color grey5 = Color(0xFF7d7d7d);
-  static const Color lightGrey = Color(0xFFd5d9dd);
-  static const Color lightGrey2 = Color(0xFFd7dbdf);
-  static const Color dividerGreyColor = Color(0xFFd7dbdf);
-  static const Color lightGreyGedan = Color(0xFFf6f6f7);
-  static const Color unreadNotificationColor = Color(0xFFf7f7f7);
-  static const Color darkTextColor = Color(0xFF535a5e);
-  static const Color red = Color(0xFFcd2b30);
-  static const Color brightRed = Color(0xFFFF2E36);
-  static Color lightRed = const Color(0xFFCD2B31).withOpacity(0.15);
-  static const Color confirmationGreen = Color(0xFF189c34);
-  static const Color alertRed = Color(0xFFcd2b30);
+  // -------------------- Background Colors -------------------- //
+  static const Color backgroundDark = Color(0xFF1B1B1B); // darkCharcoal
+  static const Color backgroundDarker = Color(0xFF1E1E2A); // midnightNavy
+  static const Color backgroundLight = Color(0xFFF7D7C7); // palePeach
 
-  static const Color backgroundGrey = Color(0xFFf8f8f8);
-  static const Color backgroundWhite = Color(0xFFFAFAFA);
-  static const Color green = Color(0xFF074F57);
-  static const Color textGrey = Color(0xFF909090);
-  static const Color black = Colors.black;
+  // -------------------- Border / Divider / Misc -------------------- //
+  static const Color borderColor = Color(0xFF5E6E78); // steelGrey
+  static const Color disabledColor = Color(0xFFA04C4F); // mutedRed
+  static const Color cardColor = Color(0xFF4C2A58); // deepPurple
+  static const Color shadowColor = Color(0xFF202020); // softBlack
 
-  static const Color lightGreen = Color(0xFF527E91);
-  static const Color lightBorderColor = Color(0xFFD7DBDF);
+  // -------------------- Additional Styling -------------------- //
+  static const Color hoverColor = Color(0xFFD2B1E2); // softLavender
+  static const Color highlightColor =
+      Color(0xFFE93989); // electricPink (reused as highlight)
 
-  static const Color selectionGreen = Color(0xFFdde5e9);
-  //-------------------------------------------------//
-  //main colors
-  static const Color primaryColor = midnightBlue;
-  static const Color secondaryColor = blueGrey;
-//-------------------------------------------------//
+  // Optional:
+  static const Color errorColor = Colors.redAccent;
+  static const Color successColor = Colors.greenAccent;
 
-  static const Color textPrimaryColor = Color(0xFF212c2d);
+  // -------------------- Primary Text Colors -------------------- //
+  static const Color textPrimaryColor =
+      Color(0xFFF7D7C7); // Light peach text on dark backgrounds
+  static const Color textPrimaryDark =
+      Color(0xFF1B1B1B); // Dark text on light backgrounds
 
-  static const Color textSecondaryColor = Color(0xFF535a5e);
+  // -------------------- Secondary Text Colors -------------------- //
+  static const Color textSecondaryColor = Color(0xFFD2B1E2); // Soft lavender
+  static const Color textTertiaryColor =
+      Color(0xFFA391B4); // Desaturated purple/grey
 
-  static const Color inActiveSelectionGrey = Color(0xFFb8bab3);
+  // -------------------- Muted / Disabled Text -------------------- //
+  static const Color textMuted =
+      Color(0xFF8B7D7C); // Warm grey for hints, subtitles
+  static const Color textDisabled =
+      Color(0xFF5E6E78); // Steel grey for inactive text
 
-  static const Color disabledIconGreyColor = Color(0xFF9ea3a4);
+  // -------------------- Alert / Highlight -------------------- //
+  static const Color textError =
+      Color(0xFFE93989); // Electric pink/red for warnings or emphasis
+  static const Color textLink =
+      Color(0xFF3E80B1); // Cyan blue for links or actions
 
-  static const Color grey3 = Color(0xFF333333);
+  // -------------------- Special Use -------------------- //
+  static const Color textInverse =
+      Color(0xFF1E1E2A); // For text on bright backgrounds (used on pale peach)
+  static const Color textOnPurpleCard =
+      Color(0xFFF7F7F7); // Near white for deep purple cards
 }
