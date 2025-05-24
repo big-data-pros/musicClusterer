@@ -42,16 +42,16 @@ df = df.withColumn('popularity', lit(None).cast(StringType())) \
        .withColumn('spotify_url', lit(None).cast(StringType())) \
        .withColumn('image_url', lit(None).cast(StringType()))
 
-print("\nBefore removing duplicates:", df.count())
+print("\nInitial row count:", df.count())
 
-df.na.drop(subset=['title'], how='all')  # Drop rows where title is null
+# Remove nulls from critical columns
+print("\nRemoving rows with null values in critical columns...")
+df = df.na.drop(subset=['title', 'genre'], how='any')  # Drop rows where either title or genre is null
+print("After removing nulls:", df.count())
+
 # Remove duplicates based on title column
-
+print("\nRemoving duplicate titles...")
 df = df.dropDuplicates(['title'])
-df=df.na.drop(subset=['genre'], how='all')  # Drop rows where genre is null
-  
-
-
 print("After removing duplicates:", df.count())
 
 # Show the cleaned data
