@@ -39,7 +39,7 @@ df = spark.read \
     .option("mode", "PERMISSIVE") \
     .option("nullValue", "") \
     .option("treatEmptyValuesAsNulls", "false") \
-    .csv(csv_path)
+    .csv(csv_path).limit(100)
     
 
 
