@@ -29,11 +29,19 @@ if not local_path:
 csv_path = os.path.join(local_path, 'discogs.csv')
 
 # Read the CSV file
+
 df = spark.read \
     .option("header", "true") \
     .option("inferSchema", "true") \
+    .option("multiLine", "true") \
+    .option("escape", "\"") \
+    .option("quote", "\"") \
+    .option("mode", "PERMISSIVE") \
+    .option("nullValue", "") \
+    .option("treatEmptyValuesAsNulls", "false") \
     .csv(csv_path) \
-    .limit(400)  # For testing, remove this in production
+    .limit(400)
+
 
 # Drop unnecessary columns
 df = df.drop('status', 'notes', 'label_id', 'format', 'style', 
