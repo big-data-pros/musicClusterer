@@ -39,25 +39,23 @@ df = spark.read \
     .option("mode", "PERMISSIVE") \
     .option("nullValue", "") \
     .option("treatEmptyValuesAsNulls", "false") \
-    .csv(csv_path) \
-    .limit(400)
+    .csv(csv_path)
+    
 
 
 # Drop unnecessary columns
 df = df.drop('status', 'notes', 'label_id', 'format', 'style', 
-             'master_id', 'company_name', 'release_id', 'artist_id', 'video_url')
-df = df.withColumn('popularity', lit(None).cast(StringType())) \
-       .withColumn('spotify_url', lit(None).cast(StringType())) \
-       .withColumn('image_url', lit(None).cast(StringType()))
+             'master_id', 'company_name', 'release_id',  'video_url')
+ 
 
 print("\nInitial row count:", df.count())
 
-# Remove nulls from critical columns
+# !Remove nulls from critical columns
 print("\nRemoving rows with null values in critical columns...")
 df = df.na.drop(subset=['title', 'genre'], how='any')  # Drop rows where either title or genre is null
 print("After removing nulls:", df.count())
 
-# Remove duplicates based on title column
+# !Remove duplicates based on title column
 print("\nRemoving duplicate titles...")
 df = df.dropDuplicates(['title'])
 print("After removing duplicates:", df.count())
@@ -76,7 +74,7 @@ data_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'data')
 output_path = os.path.join(data_dir, 'cleaned_discogs_sample.csv')
 
 # Save to CSV using Pandas
-df.toPandas().to_csv(output_path, index=False)
+df.toPandas().to_csv('D:/flutter_projects/musicClusterer/discogs_cleaned.csv', index=False)
 print(f"\nSaved cleaned data to: {output_path}")
 
 # Stop Spark session
