@@ -33,7 +33,7 @@ df = spark.read \
     .option("header", "true") \
     .option("inferSchema", "true") \
     .csv(csv_path) \
-    .limit(100)  # For testing, remove this in production
+    .limit(400)  # For testing, remove this in production
 
 # Drop unnecessary columns
 df = df.drop('status', 'notes', 'label_id', 'format', 'style', 
@@ -42,8 +42,19 @@ df = df.withColumn('popularity', lit(None).cast(StringType())) \
        .withColumn('spotify_url', lit(None).cast(StringType())) \
        .withColumn('image_url', lit(None).cast(StringType()))
 
+print("\nBefore removing duplicates:", df.count())
+
+df.na.drop(subset=['title'], how='all')  # Drop rows where title is null
+# Remove duplicates based on title column
+df = df.dropDuplicates(['title'])
+df.na.drop(subset=['genre'], how='all')  # Drop rows where title is null
+
+
+
+print("After removing duplicates:", df.count())
+
 # Show the cleaned data
-print("Cleaned Schema:")
+print("\nCleaned Schema:")
 df.printSchema()
 
 print("\nFirst 5 rows of cleaned data:")
@@ -51,15 +62,12 @@ df.show(5, truncate=False)
 
 print("\nTotal rows:", df.count())
 
-# Convert to Pandas DataFrame for easier manipulation
-pandas_df = df.toPandas()
-
 # Get the absolute path to the data directory
 data_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'data')
 output_path = os.path.join(data_dir, 'cleaned_discogs_sample.csv')
 
 # Save to CSV using Pandas
-pandas_df.to_csv(output_path, index=False)
+df.toPandas().to_csv(output_path, index=False)
 print(f"\nSaved cleaned data to: {output_path}")
 
 # Stop Spark session
