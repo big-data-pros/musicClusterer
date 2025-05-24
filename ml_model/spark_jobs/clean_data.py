@@ -46,9 +46,10 @@ print("\nBefore removing duplicates:", df.count())
 
 df.na.drop(subset=['title'], how='all')  # Drop rows where title is null
 # Remove duplicates based on title column
-df = df.dropDuplicates(['title'])
-df.na.drop(subset=['genre'], how='all')  # Drop rows where title is null
 
+df = df.dropDuplicates(['title'])
+df=df.na.drop(subset=['genre'], how='all')  # Drop rows where genre is null
+  
 
 
 print("After removing duplicates:", df.count())
