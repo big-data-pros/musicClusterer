@@ -47,7 +47,6 @@ df = spark.read \
 df = df.drop('status', 'notes', 'label_id', 'format', 'style', 
              'master_id', 'company_name', 'release_id',  'video_url')
  
-
 print("\nInitial row count:", df.count())
 
 # !Remove nulls from critical columns
@@ -59,6 +58,7 @@ print("After removing nulls:", df.count())
 print("\nRemoving duplicate titles...")
 df = df.dropDuplicates(['title'])
 print("After removing duplicates:", df.count())
+
 
 # Show the cleaned data
 print("\nCleaned Schema:")

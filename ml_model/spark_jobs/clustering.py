@@ -1,53 +1,60 @@
 from pyspark.sql import SparkSession
-
-spark = SparkSession.builder \
-    .appName("Music Recommender") \
-    .getOrCreate()
-
-df = spark.read.csv("discog.csv", header=True, inferSchema=True)
-
-from pyspark.sql.functions import col
-df = df.select("title", "artist_name", "genre", "release_date", "country")
-
-df = df.na.drop(subset=["title", "artist_name", "genre", "release_date", "country"])
-
 from pyspark.ml.feature import StringIndexer, OneHotEncoder, VectorAssembler
+from pyspark.ml.clustering import KMeans
+from pyspark.sql.functions import col
 
-# String Indexing
-indexers = [
-    StringIndexer(inputCol=col, outputCol=f"{col}_index").fit(df)
-    for col in ["artist_name", "genre", "country"]
-]
+# Start Spark session
+spark = SparkSession.builder.appName("MusicRecommender").getOrCreate()
 
-for indexer in indexers:
-    df = indexer.transform(df)
+# Load and clean data
+df = spark.read.csv("discog.csv", header=True, inferSchema=True)
+df = df.select("title", "artist_id", "genre", "release_date", "country")
+df = df.na.drop(subset=["title", "artist_id", "genre", "release_date", "country"])
 
-# One-Hot Encoding
-encoder = OneHotEncoder(
-    inputCols=["artist_name_index", "genre_index", "country_index"],
-    outputCols=["artist_vec", "genre_vec", "country_vec"]
-)
-df = encoder.fit(df).transform(df)
 
-# Assemble features
+from pyspark.ml.feature import StringIndexer
+
+# Create StringIndexers and fit them
+artist_indexer = StringIndexer(inputCol="artist_id", outputCol="artist_index").fit(df)
+genre_indexer = StringIndexer(inputCol="genre", outputCol="genre_index").fit(df)
+country_indexer = StringIndexer(inputCol="country", outputCol="country_index").fit(df)
+
+# Transform dataframe with indexers
+df_indexed = artist_indexer.transform(df)
+df_indexed = genre_indexer.transform(df_indexed)
+df_indexed = country_indexer.transform(df_indexed)
+
+
+df_indexed = df_indexed.withColumn("release_year", col("release_date").cast("double"))
+
+from pyspark.ml.feature import VectorAssembler
+df_indexed = df_indexed.na.fill({
+    "artist_index": 0.0,
+    "genre_index": 0.0,
+    "country_index": 0.0,
+    "release_year": 0.0
+})
+
 assembler = VectorAssembler(
-    inputCols=["artist_vec", "genre_vec", "country_vec", "release_date"],
+    inputCols=["artist_index", "genre_index", "country_index", "release_year"],
     outputCol="features"
 )
-df_vector = assembler.transform(df)
 
-from pyspark.ml.clustering import KMeans
+df_vector = assembler.transform(df_indexed)
 
+# Train KMeans model
 kmeans = KMeans(k=100, seed=42, featuresCol="features", predictionCol="cluster")
-model = kmeans.fit(df_vector)
-clustered_df = model.transform(df_vector)
+try:
+    model = kmeans.fit(df_vector)
+except Exception as e:
+    print(e)
+ 
+# Save everything
+artist_indexer.write().overwrite().save("models/artist_indexer")
+genre_indexer.write().overwrite().save("models/genre_indexer")
+country_indexer.write().overwrite().save("models/country_indexer")
+# encoder.write().overwrite().save("models/encoder")
+assembler.write().overwrite().save("models/assembler")
+model.write().overwrite().save("models/kmeans_model")
 
-# Choose a song
-target_song = "The World Of Ray Price"
-song_cluster = clustered_df.filter(col("title") == target_song).select("cluster").first()["cluster"]
-
-# Recommend songs from the same cluster
-recommendations = clustered_df.filter(col("cluster") == song_cluster).select("title").distinct().limit(5)
-recommendations.show()
-
-clustered_df.select("title", "cluster").write.csv("clustered_songs.csv", header=True)
+print("✅ Model and preprocessing steps saved.")
